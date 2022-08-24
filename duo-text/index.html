@@ -173,12 +173,12 @@
 				<span>
 					<br x-show="force_nl.includes(d[0])">
 
-					<div :class="isNaN(d[0]) ? 'content-line' : 'numeric-header'">
+					<div :class="(d[0] !== '') ? 'content-line' : 'numeric-header'">
 						<div class="upper-line">
 							<span x-text="d[0]">...fetching text</span>
 						</div>
 
-						<div class="lower-line" :class="isNaN(d[0]) == false ? 'display-none' : ''">
+						<div class="lower-line">
 							<span x-text="d[1]">...fetching text</span>
 						</div>
 					</div>
