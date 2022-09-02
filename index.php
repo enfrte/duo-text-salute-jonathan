@@ -13,7 +13,7 @@ $translation_table = [];
 
 foreach ($text_exp as $index => $word) {
     
-    $word_trimmed = str_replace(['!', '?', ',', '.', '(', ')', ';', '“', '”', ':', '"'], "", $word);
+    $word_trimmed = str_replace(['·', '»', '«', '!', '?', ',', '.', '(', ')', ';', '“', '”', ':', '"'], "", $word);
 
     foreach ($db as $ie => $en) {
         if (strcasecmp($word_trimmed, $ie) == 0) {
