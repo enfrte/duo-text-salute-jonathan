@@ -76,7 +76,7 @@
 			display: none;
 		}
 
-		.numeric-header {
+		.newline {
 			padding-top: 30px;
 		}
 
@@ -88,7 +88,7 @@
 
 	</style>
 
-	<title>De Bello Gallico</title>
+	<title>Salute Jonathan</title>
 </head>
 <body>
 
@@ -100,7 +100,7 @@
 				data = fetchData;
 				if (data.length > 1) show_missing_data_msg = false;
 			})
-			.then(log => console.log())">
+			.then(/*log => console.log()*/)">
 
 		<div id="attributes-menu" class="text-container">
 			<a href="#"
@@ -170,19 +170,12 @@
 			<p x-show="show_missing_data_msg" x-text="missing_data_msg"></p>
 	
 			<template x-for="(d, index) in data">
-				<span>
-					<br x-show="force_nl.includes(d[0])">
 
-					<div :class="(d[0] !== '') ? 'content-line' : 'numeric-header'">
-						<div class="upper-line">
-							<span x-text="d[0]">...fetching text</span>
-						</div>
-
-						<div class="lower-line">
-							<span x-text="d[1]">...fetching text</span>
-						</div>
+					<div :class="(d[0] !== '') ? 'content-line' : 'newline'">
+						<div class="upper-line" x-text="d[0]"></div>
+						<div class="lower-line" x-text="d[1]"></div>
 					</div>
-				</span>
+
 			</template>
 		
 		</div>
@@ -192,7 +185,6 @@
 	<script>
 		function alpineInstance() {
 			return {
-				force_nl: ['Tom:','Linda:','Bob:'],
 				show_missing_data_msg: true,
 				missing_data_msg: 'Loading text...',
 				// To do:
