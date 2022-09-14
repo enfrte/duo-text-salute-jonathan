@@ -11,17 +11,22 @@ $text_exp = preg_split('/( |\n)/', $text);
 
 $translation_table = [];
 
+$punctuation = ['·', '»', '«', '!', '?', ',', '.', '(', ')', ';', '“', '”', ':', '"'];
+
 foreach ($text_exp as $index => $word) {
     
-    $word_trimmed = str_replace(['·', '»', '«', '!', '?', ',', '.', '(', ')', ';', '“', '”', ':', '"'], "", $word);
+    $word_trimmed = str_replace($punctuation, "", $word);
+
+    $translation_table[$index] = [ $word, '' ]; // default if no translation found
 
     foreach ($db as $ie => $en) {
         if (strcasecmp($word_trimmed, $ie) == 0) {
             $translation_table[$index] = [ $word, $en ];
             break;
         }
-        else {
-            $translation_table[$index] = [ $word, '' ];
+        elseif ( in_array($word, $punctuation) || $word === '-' ) { // If check is punctuation, copy it as is. Hyphen is a special case.
+            $translation_table[$index] = [ $word, $word ];
+            break;
         }
     }
 }
@@ -33,6 +38,8 @@ echo '<pre>';
 
 $json = json_encode($translation_table);
 
-echo $json;
+//echo $json;
 
 file_put_contents('duo-text/finished.json', $json);
+
+echo 'done';
