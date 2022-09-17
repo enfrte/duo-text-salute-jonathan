@@ -81,9 +81,19 @@
 			padding-top: 30px;
 		}
 
+		img {
+			padding-top: 50px;
+			max-width: 60%;
+		}
+
 		@media (max-width: 576px) { 
 			.upper-line {
 				font-size: 18px;
+			}
+
+			img {
+				padding-top: 40px;
+				max-width: 100%;
 			}
 		}
 
@@ -95,14 +105,14 @@
 
 <div id="app">
 
-	<div class="text-container">
-
-		<p v-if="!loaded">Loading...</p>
-
-		<template v-for="d in json_data">
-			<div :class="(d[0] !== '') ? 'content-line' : 'newline'">
+	<div v-if="loaded" class="text-container">
+		<h1>Sulute Jonathan</h1>
+		
+		<template v-for="d in json_data" :index="index">
+			<div v-if="d[1] == '<img>'" v-html="d[0]"></div>
+			<div v-else :class="(d[0] !== '') ? 'content-line' : 'newline'">				
 				<div class="upper-line">{{d[0]}}</div>
-				<div class="lower-line">{{d[1]}}</div>
+				<div class="lower-line">{{ (d[1] == '') ? '&nbsp;' : d[1]}}</div>
 			</div>
 		</template>
 
@@ -111,7 +121,12 @@
 			v-if="pagination < 9">
 			Load chapters {{ ( pagination + 1 ) * 10 }} - {{( ( pagination + 1 ) * 10 ) + 10}}
 		</button>
-	</div>	
+	</div>
+	<div v-else class="text-container">
+		<h1>Sulute Jonathan</h1>
+		<p v-if="!loaded">Loading...</p>
+	</div>
+
 </div>	
 
 <script>
@@ -135,7 +150,8 @@ createApp({
 			this.fetchChapter();
 		},
 		fetchChapter() {
-			// Simple GET request using fetch
+			this.loaded = false;
+
 			fetch(`./chapters/0${this.pagination}.json`)
 			.then(response => response.json())
 			.then( data => {
@@ -150,7 +166,7 @@ createApp({
 		this.fetchChapter();
 	}
 
-}).mount('#app')	
+}).mount('#app')
 
 </script>
 
