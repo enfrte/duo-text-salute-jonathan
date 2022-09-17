@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script defer src="../js/alpine.min.js"></script>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Domine&family=EB+Garamond&family=Istok+Web&family=Lato&family=Merriweather&family=Open+Sans+Condensed:wght@300&family=Oswald&display=swap" rel="stylesheet">
+
+	<style>
+		body {
+			background-color: #123;
+			margin: 0;
+		}
+
+		.upper-line {
+			font-size: 24px;
+		}
+
+		.lower-line {
+			font-size: 14px;
+		}
+
+		.content-line {
+			display: inline-block;
+			text-align: center;
+			margin: 15px 13px 0 0;
+		}
+
+		.text-container {
+			background-color: whitesmoke;
+			padding: 30px;
+			max-width: 700px;
+			margin: auto;
+		}
+
+		#attributes-menu {
+			padding-bottom: 0;
+			padding-top: 10px;
+			text-align: right;
+		}
+
+		.attributes-container {
+			padding: 15px;
+			background-color: #E9ECE6;
+			text-align: left;
+		}
+
+		#attributes-menu, .attributes-container {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans';
+		}
+
+		.attributes-container button {
+			width: 25px;
+			height: 25px;
+			margin: 5px;
+			font-weight: bold;
+		}
+
+		.attributes-handler {
+			background-color: #E9ECE6;
+			padding: 5px;
+		}
+
+		.font-selector {
+			padding: 5px;
+			margin: 5px;
+			background-color: white;
+			display: inline-block;
+		}
+
+		.display-none {
+			display: none;
+		}
+
+		.newline {
+			padding-top: 30px;
+		}
+
+		@media (max-width: 576px) { 
+			.upper-line {
+				font-size: 18px;
+			}
+		}
+
+	</style>
+
+	<title>Salute Jonathan</title>
+</head>
+<body>
+
+	<div 
+		x-data="alpineInstance()"
+		x-init="fetch('finished.json')
+			.then(response => response.json())
+			.then(fetchData => {
+				data = fetchData;
+				if (data.length > 1) show_missing_data_msg = false;
+			})
+			.then(/*log => console.log()*/)">
+
+		<div id="attributes-menu" class="text-container">
+			<a href="#"
+				class="attributes-handler"
+				x-on:click.prevent="show_att_menu = !show_att_menu" 
+				x-text="show_att_menu ? 'Hide attributes' : 'Change appearance'">
+			</a>
+
+			<div class="attributes-container" x-show="show_att_menu">
+				<div class="upper-menu">
+					<p><strong>Learning language</strong></p>
+					<div>
+						<button x-on:click="changeAttribute({class: '.upper-line', type: 'size', value: -2})">-</button>
+						<button x-on:click="changeAttribute({class: '.upper-line', type: 'size', value: 2})">+</button>
+						<span>Font size</span>
+					</div>
+					<div>
+						<p>
+							Font family: 
+							<span x-text="font_selected_upper_text"></span>
+						</p>
+						<template x-for="(font, font_index) in font_families">
+							<span>
+								<a 
+									class="font-selector" 
+									href="#" 
+									x-text="font"
+									x-on:click.prevent="changeAttribute({class: '.upper-line', type: 'family', value: font_index})">
+									...
+								</a>
+							</span>
+						</template>
+					</div>
+				</div>
+				
+				<div class="lower-menu">
+					<p><strong>Native language</strong></p>
+					<div>
+						<button x-on:click="changeAttribute({class: '.lower-line', type: 'size', value: -2})">-</button>
+						<button x-on:click="changeAttribute({class: '.lower-line', type: 'size', value: 2})">+</button>
+						<span>Font size</span>
+					</div>
+					<div>
+						<p>
+							Font family: 
+							<span x-text="font_selected_lower_text"></span>
+						</p>
+						<template x-for="(font, font_index) in font_families">
+							<span>
+								<a 
+									class="font-selector" 
+									href="#" 
+									x-text="font"
+									x-on:click.prevent="changeAttribute({class: '.lower-line', type: 'family', value: font_index})">
+									...
+								</a>
+							</span>
+						</template>
+					</div>
+				</div>
+			</div>
+		
+		</div>
+
+		<div class="text-container">
+
+			<p x-show="show_missing_data_msg" x-text="missing_data_msg"></p>
+	
+			<template x-for="(d, index) in data">
+
+					<div :class="(d[0] !== '') ? 'content-line' : 'newline'">
+						<div class="upper-line" x-text="d[0]"></div>
+						<div class="lower-line" x-text="d[1]"></div>
+					</div>
+
+			</template>
+		
+		</div>
+
+	</div>
+
+	<script>
+		function alpineInstance() {
+			return {
+				show_missing_data_msg: true,
+				missing_data_msg: 'Loading text...',
+				// To do:
+				//light_theme: true,
+				//word_spacing: ,
+				//line_spacing: ,
+				//page_width: ,
+				show_att_menu: false,
+				font_families_index: false,
+				font_families: [
+					'Domine','"EB Garamond"','"Istok Web"','Lato','Merriweather','"Open Sans Condensed"','Oswald', 'serif', 'sans-serif'
+				],
+				font_selected_upper_text: 'System default',
+				font_selected_lower_text: 'System default',
+				data: [],
+				changeAttribute: function(att) {
+					//console.log(att);
+					let elements_by_class = document.querySelectorAll(att.class);
+					
+					// Change fonts by class 
+					elements_by_class.forEach((el) => {
+						if (att.type == 'size')
+						{
+							const fontSize_s = window.getComputedStyle(el).fontSize
+							const fontSize_i = parseInt(fontSize_s);
+							el.style.fontSize = fontSize_i + att.value + "px";
+						}
+						else if (att.type == 'family') {
+							const fontFamily = window.getComputedStyle(el).fontFamily
+							el.style.fontFamily = this.font_families[att.value];
+						}
+					});
+
+					// Update selected font family
+					if (att.type == 'family' && att.class == '.upper-line') {
+						this.font_selected_upper_text = this.font_families[att.value];
+					}
+					else if (att.type == 'family' && att.class == '.lower-line') {
+						this.font_selected_lower_text = this.font_families[att.value];
+					}
+				},
+			}
+		}
+	</script>
+
+</body>
+</html>
